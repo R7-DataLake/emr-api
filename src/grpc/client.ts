@@ -204,4 +204,50 @@ export class GRPCClient {
 
   }
 
+  /**
+   * 
+   * @param params {object} `hospcode` รหัสหน่วยบริการ, `seq` ลำดับที่รับบริการ
+   * @param apiKey {string} คีย์สำหรับใช้กับ gRPC Server ฝั่ง สสจ.
+   * @returns {Promise<any[]>}
+   */
+  getOpdInfo(params: any, apiKey: any): Promise<any> {
+
+    const jwtMetadata = new grpc.Metadata();
+    jwtMetadata.add("Authorization", `Bearer ${apiKey}`);
+
+    return new Promise((resolve: any, reject: any) => {
+      this.client.getOpdInfo(params, jwtMetadata, (err: any, response: any) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(response)
+        }
+      });
+    });
+
+  }
+
+  /**
+   * 
+   * @param params {object} `hospcode` รหัสหน่วยบริการ, `an` ลำดับที่รับบริการ
+   * @param apiKey {string} คีย์สำหรับใช้กับ gRPC Server ฝั่ง สสจ.
+   * @returns {Promise<any[]>}
+   */
+  getIpdInfo(params: any, apiKey: any): Promise<any> {
+
+    const jwtMetadata = new grpc.Metadata();
+    jwtMetadata.add("Authorization", `Bearer ${apiKey}`);
+
+    return new Promise((resolve: any, reject: any) => {
+      this.client.getIpdInfo(params, jwtMetadata, (err: any, response: any) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(response)
+        }
+      });
+    });
+
+  }
+
 }

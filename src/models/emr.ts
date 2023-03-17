@@ -77,4 +77,27 @@ export class EmrModel {
     return client.getOpdLab(params, apiKey);
   }
 
+  /**
+   * 
+   * @param params {object} `hospcode` รหัสหน่วยบริการ, `seq` ลำดับที่รับบริการ}
+   * @param apiKey {string} สำหรับเชื่อม gRPC ฝั่ง สสจ.
+   * @param zoneEndpoint {string} gRPC server สสจ.
+   * @returns 
+   */
+  async getOpdInfo(params: any, apiKey: any, zoneEndpoint: any): Promise<any> {
+    const client = new GRPCClient(zoneEndpoint);
+    return client.getOpdInfo(params, apiKey);
+  }
+  /**
+   * 
+   * @param params {object} `hospcode` รหัสหน่วยบริการ, `an` ลำดับที่รับบริการ}
+   * @param apiKey {string} สำหรับเชื่อม gRPC ฝั่ง สสจ.
+   * @param zoneEndpoint {string} gRPC server สสจ.
+   * @returns 
+   */
+  async getIpdInfo(params: any, apiKey: any, zoneEndpoint: any): Promise<any> {
+    const client = new GRPCClient(zoneEndpoint);
+    return client.getIpdInfo(params, apiKey);
+  }
+
 }
