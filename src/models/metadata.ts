@@ -12,14 +12,20 @@ export class MetadataModel {
         'p.lname',
         'p.birth',
         'p.sex',
-        'p.ingress_zone',
-        'z.name as zone_name',
-        'p.d_update'
+        'z.zone_key',
+        'z.name as zone_name'
       )
       .innerJoin('libs.hospitals as h', 'h.hospcode', 'p.hospcode')
       .innerJoin('users.zones as z', 'z.ingress_zone', 'p.ingress_zone')
       .where('p.cid', cid)
-      .groupByRaw('p.hospcode, h.hospname, p.hn, p.ingress_zone, z.name')
+      .groupByRaw(`
+        p.hospcode,
+        h.hospname,
+        p.hn,
+        p.ingress_zone,
+        z.zone_key,
+        z.name
+      `)
   }
 
   getLastOPDvisit(db: Knex, cid: any) {
@@ -32,10 +38,11 @@ export class MetadataModel {
         'o.date_serv',
         'o.time_serv',
         'o.chiefcomp',
-        'o.ingress_zone',
-        'o.d_update'
+        'z.zone_key',
+        'z.name as zone_name'
       )
       .innerJoin('libs.hospitals as h', 'h.hospcode', 'o.hospcode')
+      .leftJoin('users.zones as z', 'z.ingress_zone', 'o.ingress_zone')
       .joinRaw(`
         inner join metadata.person as p on
         p.hn = o.hn
@@ -48,7 +55,10 @@ export class MetadataModel {
         o.hn,
         o.seq,
         o.date_serv,
-        o.ingress_zone
+        o.time_serv,
+        o.ingress_zone,
+        z.zone_key,
+        z.name
       `)
       .orderByRaw(`
         o.date_serv desc,
@@ -70,8 +80,8 @@ export class MetadataModel {
         'i.timedsc',
         'ds.name as dischs',
         'dt.name as discht',
-        'i.ingress_zone',
-        'i.d_update'
+        'z.zone_key',
+        'z.name as zone_name'
       )
       .innerJoin('libs.hospitals as h', 'h.hospcode', 'i.hospcode')
       .joinRaw(`
@@ -82,15 +92,20 @@ export class MetadataModel {
       `, [cid])
       .leftJoin('libs.dischs as ds', 'ds.code', 'i.dischs')
       .leftJoin('libs.discht as dt', 'dt.code', 'i.discht')
+      .leftJoin('users.zones as z', 'z.ingress_zone', 'i.ingress_zone')
       .groupByRaw(`
         i.hospcode,
         h.hospname,
         i.hn,
         i.an,
         i.datedsc,
+        i.dateadm,
+        i.timeadm,
+        i.timedsc,
         ds.name,
         dt.name,
-        i.ingress_zone
+        z.zone_key,
+        z.name
       `)
       .orderByRaw(`
         i.datedsc desc,
@@ -109,8 +124,11 @@ export class MetadataModel {
         'p.lname',
         'p.birth',
         'p.sex',
-        'p.d_update'
+        'p.d_update',
+        'z.zone_key',
+        'z.name as zone_name',
       )
+      .innerJoin('users.zones as z', 'z.ingress_zone', 'p.ingress_zone')
       .where('p.hospcode', hospcode);
 
     if (query) {
@@ -123,11 +141,13 @@ export class MetadataModel {
       })
     }
 
-    return sql.limit(limit).offset(offset);
+    return sql
+      .limit(limit).offset(offset);
   }
 
   getPersonListTotal(db: Knex, hospcode: any, query: any) {
     const sql = db('metadata.person as p')
+      .innerJoin('users.zones as z', 'z.ingress_zone', 'p.ingress_zone')
       .where('p.hospcode', hospcode);
 
     if (query) {
@@ -140,7 +160,8 @@ export class MetadataModel {
       })
     }
 
-    return sql.count({ total: '*' });
+    return sql
+      .count({ total: '*' });
   }
 
 }
