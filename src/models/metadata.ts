@@ -13,7 +13,8 @@ export class MetadataModel {
         'p.birth',
         'p.sex',
         'z.zone_key',
-        'z.name as zone_name'
+        'z.name as zone_name',
+        'p.d_update'
       )
       .innerJoin('libs.hospitals as h', 'h.hospcode', 'p.hospcode')
       .innerJoin('users.zones as z', 'z.ingress_zone', 'p.ingress_zone')
