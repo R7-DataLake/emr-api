@@ -43,7 +43,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
         return v;
       })
 
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -82,7 +82,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
         return v;
       })
 
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -120,7 +120,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
         v.datedsc = DateTime.fromJSDate(v.datedsc).toFormat('yyyy-MM-dd');
         return v;
       })
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -170,7 +170,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
         total: Number(total[0].total)
       }
 
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)

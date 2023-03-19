@@ -64,7 +64,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
 
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -120,7 +120,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const _results: any = await emrModel.getLastOpd(params, apiKey, zoneEndpoint);
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -176,7 +176,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const _results: any = await emrModel.getLastIpd(params, apiKey, zoneEndpoint);
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -232,7 +232,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const _results: any = await emrModel.getOpdDiag(params, apiKey, zoneEndpoint);
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -288,7 +288,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const _results: any = await emrModel.getIpdDiag(params, apiKey, zoneEndpoint);
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -344,7 +344,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const _results: any = await emrModel.getIpdDrug(params, apiKey, zoneEndpoint);
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -400,7 +400,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const _results: any = await emrModel.getOpdDrug(params, apiKey, zoneEndpoint);
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -456,7 +456,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const _results: any = await emrModel.getOpdLab(params, apiKey, zoneEndpoint);
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -512,7 +512,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const _results: any = await emrModel.getOpdInfo(params, apiKey, zoneEndpoint);
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -568,7 +568,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const _results: any = await emrModel.getIpdInfo(params, apiKey, zoneEndpoint);
       const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
