@@ -36,7 +36,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
         hn
       }
 
-      const strKey = `r7platform_emr_api_person_info_${zoneKey}_${hospcode}_${hn}`;
+      const strKey = `r7platform_emr_api_person_info_${zoneKey}${hospcode}${hn}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
@@ -93,7 +93,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
         hn
       }
 
-      const strKey = `r7platform_emr_api_opd_last_${zoneKey}_${hospcode}_${hn}`;
+      const strKey = `r7platform_emr_api_opd_last_${zoneKey}${hospcode}${hn}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
@@ -149,7 +149,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
         hn
       }
 
-      const strKey = `r7platform_emr_api_ipd_last_${zoneKey}_${hospcode}_${hn}`;
+      const strKey = `r7platform_emr_api_ipd_last_${zoneKey}${hospcode}${hn}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
@@ -198,14 +198,15 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, seq, zoneKey } = body;
+      const { hospcode, seq, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         seq
       }
 
-      const strKey = `r7platform_emr_api_opd_diag_${zoneKey}_${hospcode}_${seq}`;
+      const strKey = `r7platform_emr_api_opd_diag_${zoneKey}${hospcode}${hn}${seq}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
@@ -254,14 +255,15 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, an, zoneKey } = body;
+      const { hospcode, hn, an, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         an
       }
 
-      const strKey = `r7platform_emr_api_ipd_diag_${zoneKey}_${hospcode}_${an}`;
+      const strKey = `r7platform_emr_api_ipd_diag_${zoneKey}${hospcode}${hn}${an}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
@@ -310,14 +312,15 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, an, zoneKey } = body;
+      const { hospcode, an, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         an
       }
 
-      const strKey = `r7platform_emr_api_ipd_drug_${zoneKey}_${hospcode}_${an}`;
+      const strKey = `r7platform_emr_api_ipd_drug_${zoneKey}${hospcode}${hn}${an}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
@@ -366,14 +369,15 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, seq, zoneKey } = body;
+      const { hospcode, seq, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         seq
       }
 
-      const strKey = `r7platform_emr_api_opd_drug_${zoneKey}_${hospcode}_${seq}`;
+      const strKey = `r7platform_emr_api_opd_drug_${zoneKey}${hospcode}${hn}${seq}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
@@ -422,14 +426,15 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, seq, zoneKey } = body;
+      const { hospcode, seq, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         seq
       }
 
-      const strKey = `r7platform_emr_api_opd_lab_${zoneKey}_${hospcode}_${seq}`;
+      const strKey = `r7platform_emr_api_opd_lab_${zoneKey}${hospcode}${hn}${seq}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
@@ -478,14 +483,15 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, seq, zoneKey } = body;
+      const { hospcode, seq, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         seq
       }
 
-      const strKey = `r7platform_emr_api_opd_info_${zoneKey}_${hospcode}_${seq}`;
+      const strKey = `r7platform_emr_api_opd_info_${zoneKey}${hospcode}${hn}${seq}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
@@ -534,14 +540,15 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, an, zoneKey } = body;
+      const { hospcode, an, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         an
       }
 
-      const strKey = `r7platform_emr_api_ipd_info_${zoneKey}_${hospcode}_${an}`;
+      const strKey = `r7platform_emr_api_ipd_info_${zoneKey}${hospcode}${hn}${an}`;
       const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);

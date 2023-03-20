@@ -96,7 +96,6 @@ export class GRPCClient {
    * @returns {Promise<any[]>}
    */
   getOpdDiag(params: any, apiKey: any): Promise<any> {
-
     const jwtMetadata = new grpc.Metadata();
     jwtMetadata.add("Authorization", `Bearer ${apiKey}`);
 
