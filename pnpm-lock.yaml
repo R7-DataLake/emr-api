@@ -7,12 +7,13 @@ specifiers:
   '@fastify/autoload': ^5.7.1
   '@fastify/cors': ^8.2.1
   '@fastify/formbody': ^7.4.0
-  '@fastify/jwt': ^6.7.0
+  '@fastify/jwt': ^6.7.1
   '@fastify/rate-limit': ^7.6.0
   '@fastify/redis': ^6.1.0
   '@grpc/grpc-js': ^1.8.12
   '@grpc/proto-loader': ^0.7.5
   '@types/lodash': ^4.14.191
+  '@types/luxon': ^3.2.0
   '@types/node': ^18.15.3
   fastify: ^4.14.1
   fastify-plugin: ^4.5.0
@@ -43,7 +44,7 @@ dependencies:
   '@fastify/autoload': 5.7.1
   '@fastify/cors': 8.2.1
   '@fastify/formbody': 7.4.0
-  '@fastify/jwt': 6.7.0
+  '@fastify/jwt': 6.7.1
   '@fastify/rate-limit': 7.6.0
   '@fastify/redis': 6.1.0
   '@grpc/grpc-js': 1.8.12
@@ -64,6 +65,7 @@ dependencies:
 
 devDependencies:
   '@types/lodash': 4.14.191
+  '@types/luxon': 3.2.0
   '@types/node': 18.15.3
   gulp: 4.0.2
   gulp-clean: 0.4.0
@@ -121,8 +123,8 @@ packages:
       fastify-plugin: 4.5.0
     dev: false
 
-  /@fastify/jwt/6.7.0:
-    resolution: {integrity: sha512-VSXbh63dG1C2sBtmM/BhFuoklB6OY3r0hkcAzUrc6C0iiv/eAvoAF/utFLO3vJoshsQHDax6+zCe7hG1iZcmyA==}
+  /@fastify/jwt/6.7.1:
+    resolution: {integrity: sha512-pvRcGeyF2H1U+HXaxlRBd6s1y99vbSZjhpxTWECIGIhMXKRxBTBSUPRF7LJGONlW1/pZstQ0/Dp/ZxBFlDuEnw==}
     dependencies:
       '@fastify/error': 3.2.0
       '@lukeed/ms': 2.0.1
@@ -246,6 +248,10 @@ packages:
   /@types/long/4.0.2:
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
     dev: false
+
+  /@types/luxon/3.2.0:
+    resolution: {integrity: sha512-lGmaGFoaXHuOLXFvuju2bfvZRqxAqkHPx9Y9IQdQABrinJJshJwfNCKV+u7rR3kJbiqfTF/NhOkcxxAFrObyaA==}
+    dev: true
 
   /@types/node/18.15.3:
     resolution: {integrity: sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==}
@@ -1395,7 +1401,7 @@ packages:
     resolution: {integrity: sha512-+vSd9frUnapVC2RZYfL3FCB2p3g4TBhaUmrsWlSudsGdnxIuUvBB2QM1VZeBtc49QFwrp+wQLrDs3+xxDgI5gQ==}
     engines: {node: '>= 0.10'}
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       through2: 2.0.5
     dev: true
 
@@ -1550,8 +1556,8 @@ packages:
       sparkles: 1.0.1
     dev: true
 
-  /graceful-fs/4.2.10:
-    resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
+  /graceful-fs/4.2.11:
+    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
     dev: true
 
   /gulp-clean/0.4.0:
@@ -1603,7 +1609,7 @@ packages:
       css: 3.0.0
       debug-fabulous: 1.1.0
       detect-newline: 2.1.0
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       source-map: 0.6.1
       strip-bom-string: 1.0.0
       through2: 2.0.5
@@ -2160,7 +2166,7 @@ packages:
     resolution: {integrity: sha512-cy7ZdNRXdablkXYNI049pthVeXFurRyb9+hA/dZzerZ0pGTx42z+y+ssxBaVV2l70t1muq5IdKhn4UtcoGUY9A==}
     engines: {node: '>=0.10.0'}
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       parse-json: 2.2.0
       pify: 2.3.0
       pinkie-promise: 2.0.1
@@ -2614,7 +2620,7 @@ packages:
     resolution: {integrity: sha512-S4eENJz1pkiQn9Znv33Q+deTOKmbl+jj1Fl+qiP/vYezj+S8x+J3Uo0ISrx/QoEvIlOaDWJhPaRd1flJ9HXZqg==}
     engines: {node: '>=0.10.0'}
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       pify: 2.3.0
       pinkie-promise: 2.0.1
     dev: true
@@ -2953,7 +2959,7 @@ packages:
     resolution: {integrity: sha512-1JU/8q+VgFZyxwrJ+SVIOsh+KywWGpds3NTqikiKpDMZWScmAYyKIgqkO+ARvNWJfXeXR1zxz7aHF4u4CyH6vQ==}
     engines: {node: '>=0.10'}
     dependencies:
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       micromatch: 3.1.10
       readable-stream: 2.3.8
     transitivePeerDependencies:
@@ -3682,7 +3688,7 @@ packages:
     dependencies:
       fs-mkdirp-stream: 1.0.0
       glob-stream: 6.1.0
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       is-valid-glob: 1.0.0
       lazystream: 1.0.1
       lead: 1.0.0
@@ -3705,7 +3711,7 @@ packages:
     dependencies:
       append-buffer: 1.0.2
       convert-source-map: 1.9.0
-      graceful-fs: 4.2.10
+      graceful-fs: 4.2.11
       normalize-path: 2.1.1
       now-and-later: 2.0.1
       remove-bom-buffer: 3.0.0
