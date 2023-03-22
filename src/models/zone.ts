@@ -1,10 +1,10 @@
 import { Knex } from 'knex'
 export class ZoneModel {
 
-  getZone(db: Knex, zone: any) {
-    return db('zones')
+  getZone(db: Knex, zoneKey: any) {
+    return db('users.zones')
       .select('endpoint', 'apikey')
-      .where('ingress_zone', zone)
+      .where('zone_key', zoneKey)
       .first()
   }
 

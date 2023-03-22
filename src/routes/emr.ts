@@ -1,19 +1,22 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { StatusCodes } from 'http-status-codes';
 import _ from 'lodash';
+import convertCamelCase from '../models/utils';
 
 import { EmrModel } from '../models/emr';
 import { ZoneModel } from '../models/zone';
+import ipdDiagSchema from '../schema/emr/ipd_diag';
+import ipdDrugSchema from '../schema/emr/ipd_drug';
+import ipdInfoSchema from '../schema/emr/ipd_info';
 import ipdLastSchema from '../schema/emr/ipd_last';
+import opdDiagSchema from '../schema/emr/opd_diag';
+import opdDrugSchema from '../schema/emr/opd_drug';
+import opdInfoSchema from '../schema/emr/opd_info';
+import opdLabSchema from '../schema/emr/opd_lab';
 import opdLastSchema from '../schema/emr/opd_last';
 import personInfoSchema from '../schema/emr/person_info';
-import opdDiagSchema from '../schema/emr/opd_diag';
-import ipdDiagSchema from '../schema/emr/ipd_diag';
-import opdDrugSchema from '../schema/emr/opd_drug';
-import ipdDrugSchema from '../schema/emr/ipd_drug';
-import opdLabSchema from '../schema/emr/opd_lab';
-import ipdInfoSchema from '../schema/emr/ipd_info';
-import opdInfoSchema from '../schema/emr/opd_info';
+
+const crypto = require('crypto');
 
 export default async (fastify: FastifyInstance, _options: any, done: any) => {
 
@@ -27,14 +30,14 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, hn, zone } = body;
+      const { hospcode, hn, zoneKey } = body;
       const params: any = {
         hospcode,
         hn
       }
 
-      const key = `r7platform_emr_api_person_info_${zone}_${hospcode}_${hn}`;
-
+      const strKey = `r7platform_emr_api_person_info_${zoneKey}${hospcode}${hn}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -44,7 +47,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -57,9 +60,11 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getPersonInfo(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getPersonInfo(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
+
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -81,15 +86,15 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, hn, zone } = body;
+      const { hospcode, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
         hn
       }
 
-      const key = `r7platform_emr_api_opd_last_${zone}_${hospcode}_${hn}`;
-
+      const strKey = `r7platform_emr_api_opd_last_${zoneKey}${hospcode}${hn}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -99,7 +104,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -112,9 +117,10 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getLastOpd(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getLastOpd(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -136,15 +142,15 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, hn, zone } = body;
+      const { hospcode, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
         hn
       }
 
-      const key = `r7platform_emr_api_ipd_last_${zone}_${hospcode}_${hn}`;
-
+      const strKey = `r7platform_emr_api_ipd_last_${zoneKey}${hospcode}${hn}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -154,7 +160,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -167,9 +173,10 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getLastIpd(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getLastIpd(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -191,15 +198,16 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, seq, zone } = body;
+      const { hospcode, seq, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         seq
       }
 
-      const key = `r7platform_emr_api_opd_diag_${zone}_${hospcode}_${seq}`;
-
+      const strKey = `r7platform_emr_api_opd_diag_${zoneKey}${hospcode}${hn}${seq}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -209,7 +217,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -222,9 +230,10 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getOpdDiag(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getOpdDiag(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -246,15 +255,16 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, an, zone } = body;
+      const { hospcode, hn, an, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         an
       }
 
-      const key = `r7platform_emr_api_ipd_diag_${zone}_${hospcode}_${an}`;
-
+      const strKey = `r7platform_emr_api_ipd_diag_${zoneKey}${hospcode}${hn}${an}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -264,7 +274,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -277,9 +287,10 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getIpdDiag(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getIpdDiag(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -301,15 +312,16 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, an, zone } = body;
+      const { hospcode, an, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         an
       }
 
-      const key = `r7platform_emr_api_ipd_drug_${zone}_${hospcode}_${an}`;
-
+      const strKey = `r7platform_emr_api_ipd_drug_${zoneKey}${hospcode}${hn}${an}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -319,7 +331,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -332,9 +344,10 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getIpdDrug(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getIpdDrug(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -356,15 +369,16 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, seq, zone } = body;
+      const { hospcode, seq, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         seq
       }
 
-      const key = `r7platform_emr_api_opd_drug_${zone}_${hospcode}_${seq}`;
-
+      const strKey = `r7platform_emr_api_opd_drug_${zoneKey}${hospcode}${hn}${seq}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -374,7 +388,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -387,9 +401,10 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getOpdDrug(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getOpdDrug(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -411,15 +426,16 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, seq, zone } = body;
+      const { hospcode, seq, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         seq
       }
 
-      const key = `r7platform_emr_api_opd_lab_${zone}_${hospcode}_${seq}`;
-
+      const strKey = `r7platform_emr_api_opd_lab_${zoneKey}${hospcode}${hn}${seq}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -429,7 +445,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -442,9 +458,10 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getOpdLab(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getOpdLab(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -466,15 +483,16 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, seq, zone } = body;
+      const { hospcode, seq, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         seq
       }
 
-      const key = `r7platform_emr_api_opd_info_${zone}_${hospcode}_${seq}`;
-
+      const strKey = `r7platform_emr_api_opd_info_${zoneKey}${hospcode}${hn}${seq}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -484,7 +502,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -497,9 +515,10 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getOpdInfo(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getOpdInfo(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)
@@ -521,15 +540,16 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const body: any = request.body;
-      const { hospcode, an, zone } = body;
+      const { hospcode, an, hn, zoneKey } = body;
 
       const params: any = {
         hospcode,
+        hn,
         an
       }
 
-      const key = `r7platform_emr_api_ipd_info_${zone}_${hospcode}_${an}`;
-
+      const strKey = `r7platform_emr_api_ipd_info_${zoneKey}${hospcode}${hn}${an}`;
+      const key = crypto.createHash('md5').update(strKey).digest("hex");
       // read from cache
       const cacheResult: any = await fastify.redis.get(key);
       if (cacheResult) {
@@ -539,7 +559,7 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
           .send(results);
       }
 
-      const resZone: any = await zoneModel.getZone(dbzone, zone);
+      const resZone: any = await zoneModel.getZone(dbzone, zoneKey);
 
       if (_.isEmpty(resZone)) {
         return reply.status(StatusCodes.NOT_FOUND)
@@ -552,9 +572,10 @@ export default async (fastify: FastifyInstance, _options: any, done: any) => {
       const zoneEndpoint = resZone.endpoint || 'localhost:50052';
       const apiKey = resZone.apikey || '';
 
-      const results: any = await emrModel.getIpdInfo(params, apiKey, zoneEndpoint);
+      const _results: any = await emrModel.getIpdInfo(params, apiKey, zoneEndpoint);
+      const results: any = convertCamelCase.toSnakeCaseKey(_results);
       // save to cache
-      await fastify.redis.set(key, JSON.stringify(results), 'EX', 2 * 60 * 60); // expire in 2hr
+      await fastify.redis.set(key, JSON.stringify(results), 'EX', 1 * 60 * 60); // expire in 2hr
 
       reply.headers({ 'x-cache': false })
         .status(StatusCodes.OK)

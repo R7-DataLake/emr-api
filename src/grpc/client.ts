@@ -96,7 +96,6 @@ export class GRPCClient {
    * @returns {Promise<any[]>}
    */
   getOpdDiag(params: any, apiKey: any): Promise<any> {
-
     const jwtMetadata = new grpc.Metadata();
     jwtMetadata.add("Authorization", `Bearer ${apiKey}`);
 
@@ -240,6 +239,26 @@ export class GRPCClient {
 
     return new Promise((resolve: any, reject: any) => {
       this.client.getIpdInfo(params, jwtMetadata, (err: any, response: any) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(response)
+        }
+      });
+    });
+
+  }
+
+  /**
+   * @param apiKey {string} คีย์สำหรับใช้กับ gRPC Server ฝั่ง สสจ.
+   * @returns {Promise<any>}
+   */
+  status(apiKey: any): Promise<any> {
+    const jwtMetadata = new grpc.Metadata();
+    jwtMetadata.add("Authorization", `Bearer ${apiKey}`);
+
+    return new Promise((resolve: any, reject: any) => {
+      this.client.status(jwtMetadata, (err: any, response: any) => {
         if (err) {
           reject(err)
         } else {

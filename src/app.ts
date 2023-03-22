@@ -106,6 +106,7 @@ app.addHook('onSend', (_request: any, reply: any, _playload: any, done: any) => 
 
 // routes
 app.register(require("./routes/emr"), { prefix: '/emr' })
-app.register(require("./routes/health_check"), { prefix: '/health-check' })
+app.register(require("./routes/status"), { prefix: '/status' })
+app.register(require("./routes/metadata"), { prefix: '/metadata' })
 
 export default app
