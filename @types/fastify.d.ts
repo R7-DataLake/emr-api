@@ -8,6 +8,7 @@ declare module 'fastify' {
     authenticate: any;
     dbmetadata: Knex;
     dbzone: Knex;
+    dbprofile: Knex;
     jwt: any;
     redis: Redis;
   }
